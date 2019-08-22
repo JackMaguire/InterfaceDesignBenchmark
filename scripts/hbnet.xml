@@ -23,10 +23,12 @@
 
   <MOVERS>
     <HBNetStapleInterface name="hbnet" monte_carlo="true" scorefxn="commandline" hb_threshold="-0.6" min_networks_per_pose="1" store_network_scores_in_pose="true" minimize="false" task_operations="extra_chi,incl_curr,fix,repack_only" total_num_mc_runs="100000"/>
+    <MultiplePoseMover name="limit_to_100" max_input_poses="100"/>
   </MOVERS>
 
-  <PROTOCOLS>	
+  <PROTOCOLS>
     <Add mover="hbnet"/>
+    <Add mover="limit_to_100"/>
   </PROTOCOLS>
 
 </ROSETTASCRIPTS>
