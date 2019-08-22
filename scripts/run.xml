@@ -43,8 +43,8 @@
 
   <MOVERS>
     <FastDesign name="design" relaxscript="%%script%%" scorefxn="commandline" task_operations="extra_chi,incl_curr,linmem_ig,fix,fix_hbnet,repack_only"/>
-    <InterfaceAnalyzerMover name="IfaceAnalyzer" scorefxn="commandline" packstat="1" interface_sc="1" pack_input="0" pack_separated="1" jump="1" tracer="false" />
 
+    <InterfaceAnalyzerMover name="IfaceAnalyzer" scorefxn="commandline" packstat="1" interface_sc="1" pack_input="0" pack_separated="1" jump="1" tracer="false" />
     <FilterReportAsPoseExtraScoresMover name="BUNS1" report_as="BUNS_sc_heavy" filter_name="buh_sc_heavy"/>
     <FilterReportAsPoseExtraScoresMover name="BUNS2" report_as="BUNS_bb_heavy" filter_name="buh_bb_heavy"/>
     <FilterReportAsPoseExtraScoresMover name="BUNS3" report_as="BUNS_H" filter_name="buh_H"/>
@@ -61,6 +61,7 @@
     <Add mover="BUNS1"/>
     <Add mover="BUNS2"/>
     <Add mover="BUNS3"/>
+
     <Add mover="rsm1"/>
     <Add mover="rsm2"/>
     <Add mover="rsm3"/>
