@@ -17,7 +17,7 @@
     </OperateOnResidueSubset>
 
     <OperateOnResidueSubset name="repack_only" selector="repack" >
-      <RestrictRoRepackingRLT/>
+      <RestrictToRepackingRLT/>
     </OperateOnResidueSubset>
   </TASKOPERATIONS>
 
