@@ -1,0 +1,26 @@
+<ROSETTASCRIPTS>
+
+  <RESIDUE_SELECTORS>
+    <Chain             name="chain1" chains="1"/>
+    <Chain             name="chain2" chains="2"/>
+    <InterfaceByVector name="interface" grp1_selector="chain1" grp2_selector="chain2"/>
+    <And               name="design" selectors="interface,chain1"/>
+    <And               name="repack" selectors="interface,chain2"/>
+    <Not               name="fixed"  selector="interface"/>
+  </RESIDUE_SELECTORS>
+
+  <MOVERS>
+    <AddResidueLabel name="interface_label" residue_selector="interface" label="INTERFACE"/>
+    <AddResidueLabel name="design_label"    residue_selector="design"    label="DESIGN"/>
+    <AddResidueLabel name="repack_label"    residue_selector="repack"    label="REPACK"/>
+    <AddResidueLabel name="fixed_label"     residue_selector="fixed"     label="FIXED"/>
+  </MOVERS>
+
+  <PROTOCOLS>	
+    <Add mover="interface_label"/>
+    <Add mover="design_label"/>
+    <Add mover="repack_label"/>
+    <Add mover="fixed_label"/>
+  </PROTOCOLS>
+
+</ROSETTASCRIPTS>
