@@ -1,0 +1,69 @@
+<ROSETTASCRIPTS>
+
+  <RESIDUE_SELECTORS>
+    <ResiduePDBInfoHasLabel name="interface" property="INTERFACE" />
+    <ResiduePDBInfoHasLabel name="design"    property="DESIGN" />
+    <ResiduePDBInfoHasLabel name="repack"    property="REPACK" />
+    <ResiduePDBInfoHasLabel name="fixed"     property="FIXED" />
+    <ResiduePDBInfoHasLabel name="hbnet"     property="HBNet" />
+
+    <ResiduePropertySelector name="polar" properties="POLAR,CHARGED" logic="or_logic" />
+    <And name="polar_at_designable_interface" selectors="polar,design"/>
+  </RESIDUE_SELECTORS>
+
+  <TASKOPERATIONS>
+    <ExtraRotamersGeneric name="extra_chi" ex1="1" ex2="1" />
+    <IncludeCurrent name="incl_curr" />
+    <SetIGType name="linmem_ig" lin_mem_ig="true" />
+
+    <OperateOnResidueSubset name="fix" selector="fixed" >
+      <PreventRepackingRLT/>
+    </OperateOnResidueSubset>
+
+    <OperateOnResidueSubset name="fix_hbnet" selector="hbnet" >
+      <PreventRepackingRLT/>
+    </OperateOnResidueSubset>
+
+    <OperateOnResidueSubset name="repack_only" selector="repack" >
+      <RestrictToRepackingRLT/>
+    </OperateOnResidueSubset>
+  </TASKOPERATIONS>
+
+  <FILTERS>
+    <BuriedUnsatHbonds name="buh_sc_heavy" report_sc_heavy_atom_unsats="true" cutoff="99999" residue_selector="interface" use_ddG_style="true"/>
+    <BuriedUnsatHbonds name="buh_bb_heavy" report_bb_heavy_atom_unsats="true" cutoff="99999" residue_selector="interface" use_ddG_style="true"/>
+    <BuriedUnsatHbonds name="buh_H" report_nonheavy_unsats="true" cutoff="99999" residue_selector="interface" use_ddG_style="true"/>
+  </FILTERS>
+
+  <SIMPLE_METRICS>
+    <SequenceMetric name="des_seq" residue_selector="design" />
+    <SelectedResidueCountMetric name="n_polar" residue_selector="polar_at_designable_interface" />
+    <SelectedResidueCountMetric name="n_designable" residue_selector="design" />
+  </SIMPLE_METRICS>
+
+  <MOVERS>
+    <FastDesign name="design" relaxscript="%%script%%" scorefxn="commandline" task_operations="extra_chi,incl_curr,linmem_ig,fix,fix_hbnet,repack_only"/>
+    <InterfaceAnalyzerMover name="IfaceAnalyzer" scorefxn="commandline" packstat="1" interface_sc="1" pack_input="0" pack_separated="1" jump="1" tracer="false" />
+
+    <FilterReportAsPoseExtraScoresMover name="BUNS1" report_as="BUNS_sc_heavy" filter_name="buh_sc_heavy"/>
+    <FilterReportAsPoseExtraScoresMover name="BUNS2" report_as="BUNS_bb_heavy" filter_name="buh_bb_heavy"/>
+    <FilterReportAsPoseExtraScoresMover name="BUNS3" report_as="BUNS_H" filter_name="buh_H"/>
+
+    <RunSimpleMetrics name="rsm1" metrics="des_seq" prefix="seq_" />
+    <RunSimpleMetrics name="rsm2" metrics="n_polar" prefix="pol_" />
+    <RunSimpleMetrics name="rsm3" metrics="n_designable" prefix="des_" />
+  </MOVERS>
+
+  <PROTOCOLS>
+    <Add mover="design"/>
+
+    <Add mover="IfaceAnalyzer"/>
+    <Add mover="BUNS1"/>
+    <Add mover="BUNS2"/>
+    <Add mover="BUNS3"/>
+    <Add mover="rsm1"/>
+    <Add mover="rsm2"/>
+    <Add mover="rsm3"/>
+  </PROTOCOLS>
+
+</ROSETTASCRIPTS>
