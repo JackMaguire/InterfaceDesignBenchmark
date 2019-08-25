@@ -21,8 +21,7 @@ analyze_pose(){
 for x in a b c d e f; do
     for y in 1 2 3; do
 	name=$x$y
-	#name_of_best_pose=$(grep pose ${name}_*.pdb | sort -nk2 | head -n1 | awk -F: '{print $1}')
-	name_of_best_pose=$(grep per_residue_energy_int ${name}_*.pdb | sort -nk2 | head -n1 | awk -F: '{print $1}')
+	name_of_best_pose=$(grep per_residue_energy_int hbnet_structures/$name/hbnet_KillA2019_${name}_*.pdb | sort -nk2 | head -n1 | awk -F: '{print $1}')
 	echo $name `analyze_pose $name_of_best_pose`
     done
 done
