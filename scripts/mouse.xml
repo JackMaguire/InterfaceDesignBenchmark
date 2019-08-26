@@ -1,0 +1,57 @@
+<ROSETTASCRIPTS>
+
+  <RESIDUE_SELECTORS>
+    <ResiduePDBInfoHasLabel name="interface" property="INTERFACE" />
+    <ResiduePDBInfoHasLabel name="design"    property="DESIGN" />
+    <ResiduePDBInfoHasLabel name="repack"    property="REPACK" />
+    <ResiduePDBInfoHasLabel name="fixed"     property="FIXED" />
+    <ResiduePDBInfoHasLabel name="hbnet"     property="HBNet" />
+
+    <ResiduePropertySelector name="polar" properties="POLAR,CHARGED" logic="or_logic" />
+    <And name="polar_at_designable_interface" selectors="polar,design"/>
+  </RESIDUE_SELECTORS>
+
+  <TASKOPERATIONS>
+    <ExtraRotamersGeneric name="extra_chi" ex1="1" ex2="1" />
+    <IncludeCurrent name="incl_curr" />
+    <SetIGType name="linmem_ig" lin_mem_ig="true" />
+
+    <OperateOnResidueSubset name="fix" selector="fixed" >
+      <PreventRepackingRLT/>
+    </OperateOnResidueSubset>
+
+    <OperateOnResidueSubset name="fix_hbnet" selector="hbnet" >
+      <PreventRepackingRLT/>
+    </OperateOnResidueSubset>
+
+    <OperateOnResidueSubset name="repack_only" selector="repack" >
+      <RestrictToRepackingRLT/>
+    </OperateOnResidueSubset>
+  </TASKOPERATIONS>
+
+  <SCOREFXNS>
+    <ScoreFunction name="highres" weights="ref2015.wts"/>
+    <ScoreFunction name="lowres" weights="score3.wts"/>
+  </SCOREFXNS>
+
+  <MOVERS>
+    <MouseSetupMover name="mouse_setup" task_operations="extra_chi,incl_curr,linmem_ig,fix,repack_only"/>
+    <MouseSpyDockingProtocol name="mouse_spy" docking_score_low="lowres" spy_count="25"/>
+    <MouseFinalizeMover name="mouse_finalize"/>
+
+    <RunSimpleMetrics name="run_sm" prefix="after_docking_">
+      <MousePerResidueEnergy custom_type="per_res" />
+      <MouseTotalEnergy custom_type="total" />
+    </RunSimpleMetrics>
+  </MOVERS>
+
+  <PROTOCOLS>
+    <Add mover="mouse_setup"/>
+    <Add mover="mouse_spy"/>
+    <Add mover="run_sm"/>
+    <Add mover="mouse_finalize"/>
+  </PROTOCOLS>
+
+  <OUTPUT scorefxn="highres"/>
+
+</ROSETTASCRIPTS>
