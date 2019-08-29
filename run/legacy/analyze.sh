@@ -26,3 +26,5 @@ for x in a b c d e f; do
 	echo $name `analyze_pose $name_of_best_pose`
     done
 done
+
+#for x in a b c d e f; do echo $(pdb_to_fasta ${x}1_*.pdb | sort | uniq | wc -l) $(ls ${x}1_*.pdb | wc -l); done
